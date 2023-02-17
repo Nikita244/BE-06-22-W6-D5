@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<title>Gestione Dispositivi</title>
+		<style>
+			body {
+  font-family: 'Inter', sans-serif;
+  background-image: url("https://img.freepik.com/free-vector/white-abstract-background_23-2148817571.jpg?w=900&t=st=1676666761~exp=1676667361~hmac=dad03d68a2f39c6ba526f259c3de970e72a702db2c50d178044a1e040a623155");
+  background-size: cover; 
+}
+  
+h1{
+  text-align:center;
+  padding-top:40px; 
+  padding-bottom:20px;
+  color: #666666;
+  font-size: 25px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+#resp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  color: #666666;
+  font-family: 'Inter', sans-serif;
+  
+}
+
+.dipend {
+  background-color: #f2f2f2;
+  margin: 0 0 1rem 0;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+}
+
+.dipend ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dipend li {
+  margin: 0.5rem 0;
+}
+
+button {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #0077cc;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+ 
+}
+
+.bottone{
+ display: flex;
+  justify-content:center;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+			
+		</style>
+	</head>
+	<body>
+	
+	<h1>Informazioni dettagliate dei dipendenti e dispositivi associati</h1>
+	
+		
+		<div class ="bottone">
+		<button id="sendAjax" type="button" role="button">Show</button>
+		</div>
+		<div id="resp"></div>
+
+	
+		<script>
+			const btn = document.getElementById("sendAjax")
+			const resp = document.getElementById("resp")
+		
+			btn.addEventListener('click', () => {
+				resp.innerHTML = "";
+  fetch("/dipendenti")
+    .then(resp => resp.json())
+    .then(utenti => {
+      utenti.forEach((utente, i) => {
+        resp.innerHTML += `
+          <div class="dipend">
+        	<ul>
+        	  <li><b>ID:</b> ${utente.id}</li>
+        	  <li><b>Username:</b> ${utente.username}</li>
+        	  <li><b>Nome:</b> ${utente.nome}</li>
+        	  <li><b>Cognome:</b> ${utente.cognome}</li>
+        	  <li><b>Email:</b> ${utente.email}</li>
+        	  <li>
+        	    <b>Ruoli:</b>
+        	    <ul>
+        	      ${utente.roles.map(role => `<li>${role.type}</li>`).join('')}
+        	    </ul>
+        	  </li>
+        	  <li>
+        	    <b>Dispositivi:</b>
+        	    <ul>
+        	      ${utente.dispositivi.map(dispositivo => `<li><b>Tipo:</b> ${dispositivo.tipo}, <b>Disponibilità:</b> ${dispositivo.disponibilita}</li>`).join('')}
+        	    </ul>
+        	  </li>
+        	</ul>
+
+          </div>
+        `
+      })
+    }) 
+})
+
+		</script>
+	</body>
